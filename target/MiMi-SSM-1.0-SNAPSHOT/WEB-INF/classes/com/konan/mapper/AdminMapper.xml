@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.konan.mapper.AdminMapper" >
+
+    <!--通过id查询用户判断登录-->
+    <select id="adminByID" resultMap="admin">
+        select * from mimissm.admin where a_name=#{name}
+    </select>
+    <resultMap id="admin" type="admin">
+        <result property="aId" column="a_id"/>
+        <result property="aName" column="a_name"/>
+        <result property="aPass" column="a_pass"/>
+    </resultMap>
+
+</mapper>

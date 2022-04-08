@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.konan.mapper.ProductInfoMapper" >
+
+    <!--返回全部商品-->
+    <select id="getProductInfo" resultType="productInfo">
+        select * from mimissm.product_info
+    </select>
+
+    <!--降序返回全部商品-->
+    <select id="getProductInfoBySort" resultType="productInfo">
+        select p_id,p_name,p_content,p_price,p_image,p_number,type_id from mimissm.product_info order by(p_id) desc
+    </select>
+
+    <!--添加商品-->
+    <insert id="insert" parameterType="productInfo">
+        insert into mimissm.product_info
+        values(null,#{pName},#{pContent},#{pPrice},#{pImage},#{pNumber},#{typeId},#{pDate})
+    </insert>
+
+    <!--根据id查询商品-->
+    <select id="queryByID" parameterType="_int" resultType="productInfo">
+        select p_id,p_name,p_content,p_price,p_image,p_number,type_id from mimissm.product_info where p_id=${id}
+    </select>
+
+    <!--根据id更新商品-->
+    <update id="updateByID" parameterType="productInfo">
+        update mimissm.product_info set
+                                        p_name=#{pName},p_number=#{pNumber},type_id=#{typeId},p_price=#{pPrice},p_content=#{pContent},p_image=#{pImage}
+        where p_id=#{pId}
+    </update>
+
+    <!--根据id删除商品-->
+    <delete id="deleteByID" parameterType="_int">
+        delete from mimissm.product_info where p_id=#{id}
+    </delete>
+
+    <!--批量删除商品-->
+    <delete id="deleteBatch">
+        delete from mimissm.product_info where p_id in
+        <foreach collection="array" separator="," item="id" open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--多条件查询-->
+    <select id="condition" resultType="productInfo" parameterType="com.konan.pojo.vo.ProductVo">
+        select * from mimissm.product_info
+        <!--拼条件-->
+        <where>
+            <if test="pname!=null and pname!=''">
+                and p_name like '%${pname}%'
+            </if>
+            <if test="typeid!=null and typeid!=-1">
+                and type_id =#{typeid}
+            </if>
+            <if test="lprice!=null and lprice!=''">
+                and p_price &gt;= #{lprice}
+            </if>
+            <if test="hprice!=null and hprice!=''">
+                and p_price &lt;= #{hprice}
+            </if>
+        </where>
+        order by p_id desc
+    </select>
+
+</mapper>
